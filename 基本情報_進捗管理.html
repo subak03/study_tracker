@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学習進捗トラッカー</title>
+<style>
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  max-width: 500px;
+  margin: auto;
+}
+input, button {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  font-size: 16px;
+}
+.result {
+  margin-top: 20px;
+  padding: 10px;
+  background: #f2f2f2;
+  border-radius: 8px;
+}
+</style>
+</head>
+<body>
+
+<h2>📘 学習進捗トラッカー</h2>
+
+<label>現在のページ</label>
+<input type="number" id="current" value="184">
+
+<label>総ページ数</label>
+<input type="number" id="total" value="760">
+
+<label>1日あたりのページ数</label>
+<input type="number" id="perday" value="10">
+
+<label>試験日</label>
+<input type="date" id="exam">
+
+<button onclick="calc()">計算する</button>
+
+<div class="result" id="result"></div>
+
+<script>
+function calc() {
+  const current = parseInt(document.getElementById("current").value);
+  const total = parseInt(document.getElementById("total").value);
+  const perday = parseInt(document.getElementById("perday").value);
+  const exam = new Date(document.getElementById("exam").value);
+  const today = new Date();
+
+  const remaining = total - current;
+  const daysNeeded = remaining / perday;
+
+  const finish = new Date();
+  finish.setDate(today.getDate() + daysNeeded);
+
+  const daysToExam = Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
+
+  let msg = "";
+  msg += `残りページ：${remaining}ページ<br>`;
+  msg += `必要日数：約${daysNeeded.toFixed(1)}日<br>`;
+  msg += `完了予想日：${finish.toDateString()}<br>`;
+  msg += `試験まで：${daysToExam}日<br><br>`;
+
+  if (daysNeeded > daysToExam) {
+    msg += "⚠️ ペース不足：試験までに終わらない可能性あり";
+  } else {
+    msg += "✅ 現在のペースで間に合う";
+  }
+
+  document.getElementById("result").innerHTML = msg;
+}
+</script>
+
+</body>
+</html>
